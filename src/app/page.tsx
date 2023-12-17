@@ -1,14 +1,23 @@
+'use client'
+
 import Image from 'next/image'
 import styles from './page.module.css'
+import CountryList from './Countries'
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'https://flyby-router-demo.herokuapp.com/',
+  cache: new InMemoryCache(),
+});
 
 export default function Home() {
+
   return (
+    <ApolloProvider client={client}>
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
+      <CountryList/>
+      {/* <div className={styles.description}>
+
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -89,7 +98,8 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
-      </div>
+      </div> */}
     </main>
+    </ApolloProvider>
   )
 }
