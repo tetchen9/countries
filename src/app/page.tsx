@@ -3,7 +3,10 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import CountryList from './Countries'
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client'
+import { useDisclosure } from '@chakra-ui/react'
+import Modal from './Modal'
+import { useState } from 'react'
 
 const client = new ApolloClient({
   uri: 'https://flyby-router-demo.herokuapp.com/',
@@ -11,11 +14,44 @@ const client = new ApolloClient({
 });
 
 export default function Home() {
+  const [ userName, setUserName ] = useState<string>('')
+  const [ job, setJob ] = useState<string>('')
+  const { 
+    isOpen: isNameModalOpen, 
+    onOpen: onNameModalOpen,
+    onClose: onNameModalClose,
+  } = useDisclosure({ defaultIsOpen: true })
+  const { 
+    isOpen: isJobModalOpen,
+    onOpen: onJobModalOpen, 
+    onClose: onJobModalClose
+  } = useDisclosure()
+
 
   return (
     <ApolloProvider client={client}>
     <main className={styles.main}>
+      <div>{`${userName}, ${job}`}</div>
       <CountryList/>
+      <Modal
+        title='What is your name' 
+        children='input text here' 
+        isOpen={isNameModalOpen}
+        onClose={() => {
+          onNameModalClose()
+          onJobModalOpen()
+          setUserName('username')
+        }}
+      />
+      <Modal
+        title='What is your job?' 
+        children='input text here' 
+        isOpen={isJobModalOpen}
+        onClose={() => { 
+          onJobModalClose()
+          setJob('job')
+        }}
+      />
       {/* <div className={styles.description}>
 
         <div>
